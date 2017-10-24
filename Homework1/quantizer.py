@@ -62,13 +62,13 @@ def quantificationError(x, xq):
 
 	return e, avg/len(e) 
 
-def getEnergy(x):
-	sum = 0.0
+# def getEnergy(x):
+# 	sum = 0.0
 
-	for elem in x:
-		sum += elem**2
+# 	for elem in x:
+# 		sum += elem**2
 
-	return sum
+# 	return sum
 
 #SNR definition is 10. log10(signal energy / quantization error energy)
 def signalToNoiseRatio(x, bitNum, quantizer):
@@ -78,7 +78,9 @@ def signalToNoiseRatio(x, bitNum, quantizer):
 	#calculate the error
 	e, _ = quantificationError(x,xq)
 
-	signalEnergy = getEnergy(xq)
-	quantErrEnergy = getEnergy(e)
+	#signalEnergy = getEnergy(xq)
+	#quantErrEnergy = getEnergy(e)
+	signalEnergy = sum([x**2 for x in xq])
+	quantErrEnergy = sum([x**2 for x in e])
 
 	return 10 * np.log10(signalEnergy/quantErrEnergy)
