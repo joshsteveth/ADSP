@@ -11,7 +11,7 @@ from playwav import *
 filename = 'Track48.wav'
 #rate,data = wavfile.read(filename)
 
-def quantizeWithFilter(fileName, filter, numberOfBits, playAudio=False, channel = 2, printError = True):
+def quantize(fileName, filter, numberOfBits, playAudio=False, channel = 2, printError = True):
 	rate, audio = wavfile.read(fileName)
 	newAudio = np.zeros(audio.shape)
 	# newAudio[:,0] = filter(audio[:,0], numberOfBits)
@@ -27,15 +27,18 @@ def quantizeWithFilter(fileName, filter, numberOfBits, playAudio=False, channel 
 	if printError == True:
 		error, meanError = quantificationError(audio[:,0], newAudio[:,0])
 		print 'mean error: ', meanError
+
+		#change the plot config to avoid the overflow error
+		#plot the error
 		plt.rcParams['agg.path.chunksize'] = 20000
 		t = np.arange(len(audio)) / float(rate)
 		plt.plot(t, error)
 		plt.show()
 
 
-quantizeWithFilter(filename, midTread, 8, playAudio = False)
-#quantizeWithFilter(filename, midRise, 8)
-#quantizeWithFilter(filename, muLaw, 8, playAudio=False)
+quantize(filename, midTread, 8, playAudio = False)
+#quantize(filename, midRise, 8)
+#quantize(filename, muLaw, 8, playAudio=False)
 
 #ts = np.arange(len(data[:,0])) / float(rate)
 # audioMT = data
