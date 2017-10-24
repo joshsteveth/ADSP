@@ -23,28 +23,29 @@ def midRise(x, bitNum):
 	#add the half stepsize for the reconstruction
 	return index * stepSize + (stepSize/2)
 
-def uLaw(x, bitNum):
+def muLaw(x, bitNum, quantizer=midTread):
 	xMax, xMin = float(max(x)), float(min(x))
 
-	u = 255.0
+	mu = 255.0
 
 	###mu-Law compression:###
-	y=np.sign(x)*(np.log(1+u*np.abs(x/xMax)))/np.log(1 + u)
+	y=np.sign(x)*(np.log(1+mu*np.abs(x/xMax)))/np.log(1 + mu)
     
 	# ####Quantization, ####
 	
 	#select which quantizer we want to use
 	#use yrek = y if no quantizer is used
-	yrek = midTread(y, bitNum)
+	yrek = quantizer(y, bitNum)
 	#yrek = midRise(y, bit)
 	#yrek = y
 
     #### mu-law expanding function: ###
     #we use: exp(log(256)*yrek)=256^yrek
-	samples=np.sign(yrek)*(np.exp(np.log(1 + u)*np.abs(yrek))-1)/u *xMax
+	samples=np.sign(yrek)*(np.exp(np.log(1 + mu)*np.abs(yrek))-1)/mu *xMax
     #end signal processing
 	samples=np.clip(samples,xMin, xMax)
 	return samples
+
 
 #quantization error between a signal and its quantified signal
 #e = quantized value - original value

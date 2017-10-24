@@ -4,12 +4,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pylab as pl
 
-from util import *
-from quantizer import *
-
-filename = 'Track48.wav'
-rate,data = wavfile.read(filename)
-
 def playFile(audio, samplingRate, channels):
     p = pyaudio.PyAudio()
 
