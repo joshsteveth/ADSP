@@ -16,7 +16,7 @@ def sinfunc(cat, val):
 		fs, f = val, val * fn
 	else: return
 
-	x = np.arange(-1, 1, 1.0/fs)
+	x = np.arange(-1, 1 + 1.0/fs, 1.0/fs)
 	y = np.sin(2 * np.pi * f * x)
 
 	return x,y

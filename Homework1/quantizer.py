@@ -46,6 +46,8 @@ def muLaw(x, bitNum, quantizer=midTread):
 	samples=np.clip(samples,xMin, xMax)
 	return samples
 
+def muLawMidRise(x, bitNum):
+	return muLaw(x, bitNum, quantizer=midRise)
 
 #quantization error between a signal and its quantified signal
 #e = quantized value - original value
