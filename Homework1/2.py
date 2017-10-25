@@ -33,9 +33,9 @@ playFile(muLawAudio, rate, 2, partPlayed=0.25,
 
 #### ERROR PLOT ####
 #get the error only for the first channel
-mtError, _ = quantificationError(data[:,0], mtAudio[:,0])
-mrError, _ = quantificationError(data[:,0], mrAudio[:,0])
-muLawError, _ = quantificationError(data[:,0], muLawAudio[:,0])
+mtError = quantificationError(data[:,0], mtAudio[:,0])
+mrError = quantificationError(data[:,0], mrAudio[:,0])
+muLawError = quantificationError(data[:,0], muLawAudio[:,0])
 
 #create the time vector
 t = np.arange(len(data)) / float(rate)

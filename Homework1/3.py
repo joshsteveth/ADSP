@@ -9,7 +9,6 @@ from sin_func import *
 
 numBit = 8
 
-#t1,y1 = triangleWave(10.0, 500, 0.25)
 fs = 500.0
 tmax = 10.0
 t1 = np.arange(-1 * tmax, tmax, 1.0/fs)

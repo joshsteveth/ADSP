@@ -91,5 +91,7 @@ ax[3,1].set_xlabel('Time[s]')
 plt.subplots_adjust(hspace=0.5)
 plt.show()
 
-#playFile(audio, rate, 2)
-#playFile(audio2, rate, 2)
+playFile(audio, rate, 2, partPlayed=0.25, 
+	printText='full range audio')
+playFile(audio2, rate, 2, partPlayed=0.25,
+	printText='25db under full range')

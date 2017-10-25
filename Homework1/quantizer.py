@@ -61,26 +61,17 @@ def muLawMidRise(x, bitNum):
 #quantization error between a signal and its quantified signal
 #e = quantized value - original value
 #use category to define which quantizer is used
-def quantificationError(x, xq):
+def quantificationError(x, xq, returnMeanError=False):
 	e = []
 	for idx, val in enumerate(x):
 		e.append(xq[idx] - val) 
 
 	#also return the average error
 	#use the absolute value of the error
-	avg = 0.0
-	for err in e:
-		avg += np.abs(err)
+	if returnMeanError:
+		return e, float(sum([np.abs(err) for err in e]))/len(e)
 
-	return e, avg/len(e) 
-
-# def getEnergy(x):
-# 	sum = 0.0
-
-# 	for elem in x:
-# 		sum += elem**2
-
-# 	return sum
+	return e
 
 #SNR definition is 10. log10(signal energy / quantization error energy)
 def signalToNoiseRatio(x, bitNum, quantizer):
@@ -88,7 +79,7 @@ def signalToNoiseRatio(x, bitNum, quantizer):
 	xq = quantizer(x, bitNum)
 
 	#calculate the error
-	e, _ = quantificationError(x,xq)
+	e = quantificationError(x,xq)
 
 	#signalEnergy = getEnergy(xq)
 	#quantErrEnergy = getEnergy(e)
