@@ -17,11 +17,11 @@ y1 = triangleWave(t1, 0.25)
 snrTri = signalToNoiseRatio(y1, numBit, midTread)
 print 'SNR for triangular wave with %dbit mid tread quantizer: %.2f' % (numBit, snrTri)
 
-t2, y2 = sinfunc('f', 1)
+t2, y2 = sinfunc('f', 1, fn=0.001)
 snrSin = signalToNoiseRatio(y2, numBit, midTread)
 print 'SNR for sinusoidal wave with %dbit mid tread quantizer: %.2f' % (numBit, snrSin)
 
 filename = 'Track48.wav'
 rate,data = wavfile.read(filename)
-snrAudio = signalToNoiseRatio(data[:,0], numBit, midTread)
-print 'SNR for audio file with %dbit mid tread quantizer: %.2f' % (numBit, snrAudio)
+snrAudio = signalToNoiseRatio(data[:,0], numBit, midRise)
+print 'SNR for audio file with %dbit mid rise quantizer: %.2f' % (numBit, snrAudio)

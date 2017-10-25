@@ -11,15 +11,15 @@ from playwav import *
 filename = 'Track48.wav'
 #rate,data = wavfile.read(filename)
 
-def quantize(fileName, filter, numberOfBits, playAudio=False, channel = 2, printError = True, printErrorGraph=False):
+def quantize(fileName, quantizer, numberOfBits, playAudio=False, channel = 2, printError = True, printErrorGraph=False):
 	rate, audio = wavfile.read(fileName)
 	newAudio = np.zeros(audio.shape)
-	# newAudio[:,0] = filter(audio[:,0], numberOfBits)
-	# newAudio[:,1] = filter(audio[:,1], numberOfBits)
+	# newAudio[:,0] = quantizer(audio[:,0], numberOfBits)
+	# newAudio[:,1] = quantizer(audio[:,1], numberOfBits)
 
-	#use filter for all channel
+	#use quantizer for all channel
 	for chan in range(0, channel):
-		newAudio[:, chan] = filter(audio[:, chan], numberOfBits)
+		newAudio[:, chan] = quantizer(audio[:, chan], numberOfBits)
 
 	if playAudio == True:
 		playFile(newAudio, rate, channel)
@@ -38,7 +38,7 @@ def quantize(fileName, filter, numberOfBits, playAudio=False, channel = 2, print
 			plt.show()
 
 
-#quantize(filename, midTread, 8, playAudio = False)
+#quantize(filename, midTread, 8, playAudio = False, printErrorGraph=True)
 #quantize(filename, midRise, 8)
 quantize(filename, muLaw, 8, playAudio=False, printErrorGraph=True)
 

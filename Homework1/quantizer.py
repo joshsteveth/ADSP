@@ -1,10 +1,16 @@
 import numpy as np
 import struct
 
-def midTread(x, bitNum):
+def midTread(x, bitNum, xMax=0.0, xMin=0.0):
+	#define peak to peak distance
+	#if it's lesser or equal 0 then use the min and max value of x instead
+	p2p = xMax - xMin
+	if p2p <= 0.0:
+		p2p = float(max(x)) - float(min(x))
+
 	#stepsize is the range from max to min signal
 	#divided by 2 in the power of bit number
-	stepSize = (float(max(x)) - float(min(x))) / pow (2, bitNum) 
+	stepSize = p2p / pow (2, bitNum) 
 	#index is simply the actual signal divided by stepsize
 	#and for mid tread quantizer it is rounded
 	index = np.round(x/stepSize)
@@ -13,9 +19,13 @@ def midTread(x, bitNum):
 	return index * stepSize
 
 
-def midRise(x, bitNum):
+def midRise(x, bitNum, xMax=0.0, xMin=0.0):
+	p2p = xMax - xMin
+	if p2p <= 0.0:
+		p2p = float(max(x)) - float(min(x))
+
 	#stepsize is basically the same as mid tread
-	stepSize = (float(max(x)) - float(min(x))) / pow (2, bitNum) 
+	stepSize = p2p / pow (2, bitNum) 
 
 	#instead of round we use floor
 	index = np.floor(x/stepSize)
@@ -43,8 +53,7 @@ def muLaw(x, bitNum, quantizer=midTread):
     #we use: exp(log(256)*yrek)=256^yrek
 	samples=np.sign(yrek)*(np.exp(np.log(1 + mu)*np.abs(yrek))-1)/mu *xMax
     #end signal processing
-	samples=np.clip(samples,xMin, xMax)
-	return samples
+	return np.clip(samples,xMin, xMax)
 
 def muLawMidRise(x, bitNum):
 	return muLaw(x, bitNum, quantizer=midRise)
