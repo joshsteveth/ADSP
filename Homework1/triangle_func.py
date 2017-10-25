@@ -13,9 +13,12 @@ def triangleWave(ts, f, Amplitude=1.0):
 	#period of the triangular wave
 	T = 1.0/f
 
-	#slope of one triangle signal
+	#define slope of one triangle signal
+	#qt is 1/4 of one period
+	#it is important since we divide 1 period of tri signal
+	#into 4 triangle signals
 	qt = T/4
-	slope = 1 / qt
+	slope = Amplitude / qt
 
 	#divide the function in 4 cases
 	#based on the modulus of period
@@ -30,15 +33,15 @@ def triangleWave(ts, f, Amplitude=1.0):
 		if r < qt:
 			val = lr
 		elif r < qt * 2:
-			val = 1 - lr
+			val = Amplitude - lr
 		elif r < qt * 3:
 			val = -lr
 		else:
-			val = lr - 1
+			val = lr - Amplitude
 
 		y[idx] = val
 
-	return y * Amplitude
+	return y
 
 def triangleWave2(ts, f):
 	#create first the time and amplitude range
