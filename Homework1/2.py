@@ -9,58 +9,49 @@ from quantizer import *
 from playwav import *
 
 filename = 'Track48.wav'
-#rate,data = wavfile.read(filename)
+rate,data = wavfile.read(filename)
 
-def quantize(fileName, quantizer, numberOfBits, playAudio=False, channel = 2, printError = True, printErrorGraph=False):
-	rate, audio = wavfile.read(fileName)
+def quantize(samplingRate, audio, quantizer, numberOfBits):
 	newAudio = np.zeros(audio.shape)
-	# newAudio[:,0] = quantizer(audio[:,0], numberOfBits)
-	# newAudio[:,1] = quantizer(audio[:,1], numberOfBits)
 
 	#use quantizer for all channel
-	for chan in range(0, channel):
+	for chan in range(0, audio.shape[1]):
 		newAudio[:, chan] = quantizer(audio[:, chan], numberOfBits)
 
-	if playAudio == True:
-		playFile(newAudio, rate, channel)
+	return newAudio
 
-	if printError == True:
-		error, meanError = quantificationError(audio[:,0], newAudio[:,0])
-		print 'mean error: ', meanError
+mtAudio = quantize(rate, data, midTread, 8)
+mrAudio = quantize(rate, data, midRise, 8)
+muLawAudio = quantize(rate, data, muLaw, 8)
 
-		#change the plot config to avoid the overflow error
-		#plot the error
+playFile(mtAudio, rate, 2, partPlayed=0.25, 
+	printText='playing mid tread quantized audio')
+playFile(mrAudio, rate, 2, partPlayed=0.25,
+	printText='playing mid rise quantized audio')
+playFile(muLawAudio, rate, 2, partPlayed=0.25,
+	printText='playing mu law (mid tread) quantized audio')
 
-		if printErrorGraph == True:
-			plt.rcParams['agg.path.chunksize'] = 20000
-			t = np.arange(len(audio)) / float(rate)
-			plt.plot(t, error)
-			plt.show()
+#### ERROR PLOT ####
+#get the error only for the first channel
+mtError, _ = quantificationError(data[:,0], mtAudio[:,0])
+mrError, _ = quantificationError(data[:,0], mrAudio[:,0])
+muLawError, _ = quantificationError(data[:,0], muLawAudio[:,0])
 
+#create the time vector
+t = np.arange(len(data)) / float(rate)
 
-#quantize(filename, midTread, 8, playAudio = False, printErrorGraph=True)
-#quantize(filename, midRise, 8)
-quantize(filename, muLaw, 8, playAudio=False, printErrorGraph=True)
+#change the default value 
+#to avoid overflow while plotting
+plt.rcParams['agg.path.chunksize'] = 20000
 
-#ts = np.arange(len(data[:,0])) / float(rate)
-# audioMT = data
-# audioMT[:,0] = midTread(audioMT[:,0], 8)
-# audioMT[:,1] = midTread(audioMT[:,1], 8)
-#playFile(audioMT, rate, 2)
-# errorMT, meanErrorMT = quantificationError(data[:,0], audioMT[:,0])
-# print 'Quantization error for mid tread quantizer: ', meanErrorMT
-
-# audioMR = data
-# audioMR[:,0] = midRise(audioMR[:,0], 8)
-# audioMR[:,1] = midRise(audioMR[:,1], 8)
-#playFile(audioMR, rate, 2)
-#errorMR, meanErrorMR = quantificationError(data[:,0], audioMR[:,0])
-#print 'Quantization error for mid rise quantizer: ', meanErrorMR
-
-# audioMuLaw = data
-# audioMuLaw[:,0] = uLaw(audioMuLaw[:,0], 8)
-# audioMuLaw[:,1] = uLaw(audioMuLaw[:,1], 8)
-# playFile(audioMuLaw, rate, 2)
-#errorMuLaw, meanErrorMuLaw = quantificationError(data[:,0], audioMuLaw[:,0])
-#print 'Quantization error for u law quantizer: ', meanErrorMuLaw
+f, ax = plt.subplots(3, sharex=True)
+f.suptitle('Quantization Errors')
+ax[0].plot(t, mtError)
+ax[0].set_title('Mid Tread')
+ax[1].plot(t, mrError)
+ax[1].set_title('Mid Rise')
+ax[2].plot(t,muLawError)
+ax[2].set_title('Mu Law')
+ax[2].set_xlabel('time[s]')
+plt.show()
 
