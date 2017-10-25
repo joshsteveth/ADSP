@@ -21,7 +21,7 @@ t2, y2 = sinfunc('f', 1)
 snrSin = signalToNoiseRatio(y2, numBit, midTread)
 print 'SNR for sinusoidal wave with %dbit mid tread quantizer: %.2f' % (numBit, snrSin)
 
-# filename = 'Track48.wav'
-# rate,data = wavfile.read(filename)
-# snrAudio = signalToNoiseRatio(data[:,0], numBit, midTread)
-# print 'SNR for audio file with %dbit mid tread quantizer: %.2f' % (numBit, snrAudio)
+filename = 'Track48.wav'
+rate,data = wavfile.read(filename)
+snrAudio = signalToNoiseRatio(data[:,0], numBit, midTread)
+print 'SNR for audio file with %dbit mid tread quantizer: %.2f' % (numBit, snrAudio)

@@ -1,14 +1,12 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-#generate sin func with normalized frequenz 0.1
+#generate sin func with normalized frequenz
 #x axis is the time from -1 to 1
 #you can either set the signal frequency f or the sampling frequency fs
 #by changing the category argument to 'f' or 'fs'
 #then the function will automatically plot the result
-def sinfunc(cat, val):
-	fn = 0.1
-
+def sinfunc(cat, val, fn=0.1):
 	fs, f = 0.0, 0.0
 	if cat == 'f':
 		fs, f = val / fn, val
