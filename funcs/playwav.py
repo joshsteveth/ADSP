@@ -6,7 +6,7 @@ import pylab as pl
 
 #part played determines how much the audio should be played
 #e.g. 0.5 means that only 50% of the duration will be played
-def playFile(audio, samplingRate, channels, partPlayed=1.0, printText=''):
+def playFile(audio, samplingRate, channels, partPlayed=1.0):
     p = pyaudio.PyAudio()
 
     # open audio stream
@@ -35,11 +35,6 @@ def playFile(audio, samplingRate, channels, partPlayed=1.0, printText=''):
     # play. May repeat with different volume values (if done interactively)
     sound = (newAudio.astype(np.int16).tostring())
 
-    #print something before playing
-    #if printText is not empty
-    if printText != '':
-    	print printText
-    	
     stream.write(sound)
 
     # close stream and terminate audio object
