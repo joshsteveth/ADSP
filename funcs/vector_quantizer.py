@@ -92,6 +92,10 @@ def encodeLBG(str, cb):
 
 	threshold = 60.0
 
+	#loop through all tuple from data steam
+	#calculate best match 
+	#best match is the point that has the least distance
+	#append indices of the best match to the result
 	for t in ts:
 		bestMatch = ()
 		for idx, val in enumerate(cb):
@@ -110,6 +114,9 @@ def encodeLBG(str, cb):
 
 	return indices
 
+#multithreading approach to do LBH
+#the principial is exactly the same here
+#create new class as subclass of threading.Thread
 class encodeThread(threading.Thread):
 	def __init__(self, startIndex, dataStream, codebook, indices):
 		threading.Thread.__init__(self)
@@ -167,7 +174,8 @@ def encodeLBGMT(str, cb, M):
 
 	return indices
 
-
+#decode the indices back to "analog" signal
+#simply match the indices to the index in codebook
 def decodeLBG(indices, cb):
 	strek = []
 
