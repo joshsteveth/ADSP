@@ -7,7 +7,8 @@ from util import *
 
 
 #create initial codebook vectors
-def randomCodebook(M, N, xMin, xMax):
+#use random library for this one in xmin and xmax range
+def randomIntCodebook(M, N, xMin, xMax):
 	cb = []
 
 	for n in range(0, M):
@@ -19,6 +20,7 @@ def randomCodebook(M, N, xMin, xMax):
 
 	return cb
 
+#use values from data stream x instead of random integer
 def randomCodebook(x, M, N):
 	ts = generateTupleArray(x,N)
 
