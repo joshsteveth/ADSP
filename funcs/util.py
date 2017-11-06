@@ -33,3 +33,33 @@ def generateTupleArray(x, N):
 
 	return ts
 
+def multipleTupleArray(ta, n):
+	result = []
+	for t in ta:
+		result.append(tuple(x * n for x in t))
+	return result
+
+#calculate the update change factor epsilon
+#input is 2 tuples with the same length
+def calculateEpsilon(y1,y2):
+	dist = calculateDist(y1,y2)
+	lengthOrigin = pow(sum([x ** 2 for x in y1]), 0.5)
+	
+	if lengthOrigin == 0.0: 
+		return dist
+	else: return dist/lengthOrigin
+
+
+#it defines how much Y2 has moved from Y1
+def calculateEpsilons(Y1, Y2):
+	sumEps = 0.0
+
+	for idx, _ in enumerate(Y1):
+		sumEps += calculateEpsilon(Y1[idx], Y2[idx])
+
+	return sumEps / len(Y1)
+
+#get the maximum value of 1 vector
+#absolute value will be used
+def getAbsoluteMax(X):
+	return max([np.abs(x) for x in X]) 

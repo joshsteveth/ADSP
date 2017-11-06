@@ -85,6 +85,14 @@ def iterateCodebook(ts, y):
 
 	return newY
 
+#return false if changes are already <= epsilon
+#return true if changes are > epsilon
+# def resultStillChange(y1,y2, epsilon):
+# 	result = 0.0
+	
+
+
+
 #encode the stream based on the codebook
 #result is array of indices
 def encodeLBG(str, cb):
