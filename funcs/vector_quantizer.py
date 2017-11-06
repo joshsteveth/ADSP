@@ -176,6 +176,56 @@ def encodeLBGMT(str, cb, M):
 
 	return indices
 
+#use multi processing approach
+def processingData(startIndex, dataStream, codebook, indices):
+	for idx1, t in enumerate(dataStream):
+		bestMatch = ()
+		for idx2, val in enumerate(codebook):
+			dist = calculateDist(t, val)
+			try: 
+				if bestMatch[1] > dist:
+					bestMatch = (idx2,dist)
+			except: bestMatch = (idx2,dist)
+
+		print bestMatch
+		try:
+			indices[startIndex + idx1] = bestMatch[0]
+		except: continue
+
+
+# def encodeLBGMP(str, cb, M):
+# 	strLength = int(math.ceil(len(str)/2.0))
+
+# 	indices = []
+# 	for i in range(0, strLength):
+# 		indices.append(0)
+
+# 	process = []
+# 	processNum = int(math.ceil(strLength/float(M)))
+
+# 	vectorStream = generateTupleArray(str, len(cb[0]))
+
+# 	for i in range(0, processNum):
+# 		startIndex = i * M
+# 		endIndex = startIndex + M
+# 		try:
+# 			newDS = (vectorStream[startIndex:endIndex])
+# 		except:
+# 			newDS = (vectorStream[startIndex:])
+		
+# #		if __name__ == '__main__':
+# 		process.append(mp.Process(target=processingData, 
+# 			args=(startIndex, newDS, cb, indices, )))
+
+
+# 	for p in process:
+# 		p.start()
+# 		p.join()
+
+# 	return indices
+
+
+
 #decode the indices back to "analog" signal
 #simply match the indices to the index in codebook
 def decodeLBG(indices, cb):
