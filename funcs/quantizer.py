@@ -87,3 +87,11 @@ def signalToNoiseRatio(x, bitNum, quantizer):
 	quantErrEnergy = sum([x**2 for x in e])
 
 	return 10 * np.log10(signalEnergy/quantErrEnergy)
+
+def snr(x1, x2):
+	e = quantificationError(x1,x2)
+
+	signalEnergy = sum([pow(x,2.0) for x in x1])
+	quantErrEnergy = sum([pow(x,2.0) for x in e])
+
+	return 10 * np.log10(signalEnergy/quantErrEnergy)
