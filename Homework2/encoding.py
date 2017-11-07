@@ -10,7 +10,7 @@ from quantizer import *
 from playwav import *
 from vector_quantizer import *
 
-with open('newCodebook.txt', 'r') as a:
+with open('newCodebookNorm.txt', 'r') as a:
 	codebook = pickle.load(a)
 
 print 'codebook length: ', len(codebook)
@@ -22,19 +22,22 @@ rateAudio, audio = wav.read('Track48.wav')
 audioMusic = audio[:,0]
 audioSinging = audio[:,1]
 
-#print 'audio singing length: ', len(audioSinging)
+#apply normalization
+lenSinging = getAbsoluteMax(audioSinging)
+audioSinging = [float(x) / lenSinging for x in audioSinging]
 
 start_time = time.time()
-
 #audioSinging = audioSinging[:300000]
-audioLBG = LBG(audioSinging, codebook, threshold=60.0)
+audioLBG = LBG(audioSinging, codebook, threshold=0.0)
 #tuplePerThread = 25000
 #audioLBG = LBGMT(audioSinging, codebook, tuplePerThread)
-
 print 'iteration time: ', time.time() - start_time
 
-# with open('result3.txt', 'w') as a:
-# 	pickle.dump(audioLBG, a)
+#denormalize signal to its original value
+audioLBG = [float(x) * lenSinging for x in audioLBG]
+
+with open('resultNorm.txt', 'w') as a:
+	pickle.dump(audioLBG, a)
 
 plt.plot(audioLBG)
 plt.show()

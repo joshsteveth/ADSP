@@ -93,7 +93,7 @@ def codebookIteration(dataTraining, dataStream, epsilon):
 	if changes <= epsilon: 
 		return newStream
 	
-	return codebookIteration(training, newStream, epsilon)	
+	return codebookIteration(dataTraining, newStream, epsilon)	
 
 
 def generateNewCodebook(stream, training, bits, N, epsilon=0.1):

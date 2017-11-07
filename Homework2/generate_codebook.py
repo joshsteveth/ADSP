@@ -49,13 +49,19 @@ N = 2
 start_time = time.time()
 #cb = iterateCodebook(ts,cb)
 #cb = iterate(ts, cb, 0.1)
+
+#normalization
+lenSpeech, lenSinging = getAbsoluteMax(speech), getAbsoluteMax(audioSinging)
+speech = [float(x) / lenSpeech for x in speech]
+audioSinging = [float(x) / lenSinging for x in audioSinging]
+
 ts = generateTupleArray(speech, N)
 cb = generateNewCodebook(audioSinging, speech, 
 	bitNum, N, epsilon=0.1)
 
 print 'iteration time: ', time.time() - start_time
 
-with open('newCodebook2.txt', 'w') as a:
+with open('newCodebookNorm.txt', 'w') as a:
 	pickle.dump(cb, a)
 
 
