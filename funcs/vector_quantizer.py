@@ -50,7 +50,7 @@ def calculateCodeVector(x):
 
 #1 iteration function
 #ts is the training data and y is the current codebook 
-def iterateCodebook(ts, y):
+def oneCodebookIteration(ts, y):
 	#create empty array according to codebook's length
 	#this array will be populated with the training datas 
 	#with the least euclidian distance
@@ -84,6 +84,34 @@ def iterateCodebook(ts, y):
 		newY.append(calculateCodeVector(val))
 
 	return newY
+
+def codebookIteration(dataTraining, dataStream, epsilon):
+	newStream = oneCodebookIteration(dataTraining, dataStream)
+	changes = calculateEpsilons(dataStream, newStream)
+	print 'change factor: %.5f' % changes
+
+	if changes <= epsilon: 
+		return newStream
+	
+	return codebookIteration(training, newStream, epsilon)	
+
+
+def generateNewCodebook(stream, training, bits, N, epsilon=0.1):
+	M = (2 ** bits) ** 2
+	
+	#initialize a random codebook from our data stream
+	cb = randomCodebook(stream, M, N)
+
+	#generate tuple array from our training data
+	ts = generateTupleArray(training,N)
+
+	#apply normalization
+	# ts = multipleTupleArray(ts, 1.0/getAbsoluteMax(speech))
+	# cb = multipleTupleArray(cb, 1.0/getAbsoluteMax(audioSinging))
+	
+	return codebookIteration(ts, cb, epsilon)
+
+
 
 #return false if changes are already <= epsilon
 #return true if changes are > epsilon

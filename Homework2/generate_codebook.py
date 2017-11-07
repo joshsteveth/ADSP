@@ -44,39 +44,18 @@ bitNum = 4
 #playFile(audioSingingMT, rateAudio, 1, partPlayed=0.25)
 
 #3 LBG algorithm
-M = (2 ** bitNum) ** 2
 N = 2
-
-#training set is our speech file
-ts = generateTupleArray(speech,N)
-
-
-#initialize a random codebook
-#cb = randomIntCodebook(M, N, min(speech), max(speech))
-cb = randomCodebook(audioSinging, M, N)
-
-
-#apply normalization
-# ts = multipleTupleArray(ts, 1.0/getAbsoluteMax(speech))
-# cb = multipleTupleArray(cb, 1.0/getAbsoluteMax(audioSinging))
-
-def iterate(training, stream, epsilon):
-	newStream = iterateCodebook(training, stream)
-	changes = calculateEpsilons(stream, newStream)
-	print 'change factor: %.5f' % changes
-
-	if changes <= epsilon: 
-		return newStream
-	
-	return iterate(training, newStream, epsilon)	
 
 start_time = time.time()
 #cb = iterateCodebook(ts,cb)
-#cb = iterate(ts,cb, 10)
-cb = iterate(ts, cb, 0.1)
+#cb = iterate(ts, cb, 0.1)
+ts = generateTupleArray(speech, N)
+cb = generateNewCodebook(audioSinging, speech, 
+	bitNum, N, epsilon=0.1)
+
 print 'iteration time: ', time.time() - start_time
 
-with open('newCodebook.txt', 'w') as a:
+with open('newCodebook2.txt', 'w') as a:
 	pickle.dump(cb, a)
 
 
