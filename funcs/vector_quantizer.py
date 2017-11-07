@@ -89,18 +89,14 @@ def iterateCodebook(ts, y):
 #return true if changes are > epsilon
 # def resultStillChange(y1,y2, epsilon):
 # 	result = 0.0
-	
-
 
 
 #encode the stream based on the codebook
 #result is array of indices
-def encodeLBG(str, cb):
+def encodeLBG(str, cb, threshold=0.0):
 	ts = generateTupleArray(str, len(cb[0]))
 
 	indices = []
-
-	threshold = 60.0
 
 	#loop through all tuple from data steam
 	#calculate best match 
@@ -245,8 +241,8 @@ def decodeLBG(indices, cb):
 
 	return strek
 
-def LBG(str, cb):
-	indices = encodeLBG(str, cb)
+def LBG(str, cb, threshold=0.0):
+	indices = encodeLBG(str, cb, threshold=threshold)
 
 	return decodeLBG(indices, cb)
 
