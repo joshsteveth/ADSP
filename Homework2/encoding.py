@@ -10,7 +10,7 @@ from quantizer import *
 from playwav import *
 from vector_quantizer import *
 
-with open('newCodebookNorm.txt', 'r') as a:
+with open('newCodebookNorm2.txt', 'r') as a:
 	codebook = pickle.load(a)
 
 print 'codebook length: ', len(codebook)
@@ -36,7 +36,7 @@ print 'iteration time: ', time.time() - start_time
 #denormalize signal to its original value
 audioLBG = [float(x) * lenSinging for x in audioLBG]
 
-with open('resultNorm.txt', 'w') as a:
+with open('resultNorm2.txt', 'w') as a:
 	pickle.dump(audioLBG, a)
 
 plt.plot(audioLBG)

@@ -48,9 +48,12 @@ def calculateCodeVector(x):
 
 	return tuple([val/len(x) for val in temp])
 
+def LBGVectorLength (bitNum): 
+	return (2 ** bitNum) ** 2
+
 #1 iteration function
 #ts is the training data and y is the current codebook 
-def oneCodebookIteration(ts, y):
+def iterateCodebook(ts, y):
 	#create empty array according to codebook's length
 	#this array will be populated with the training datas 
 	#with the least euclidian distance
@@ -85,33 +88,30 @@ def oneCodebookIteration(ts, y):
 
 	return newY
 
-def codebookIteration(dataTraining, dataStream, epsilon):
-	newStream = oneCodebookIteration(dataTraining, dataStream)
-	changes = calculateEpsilons(dataStream, newStream)
+def trainCodebook(dataTraining, codebook, epsilon=0.1):
+	newCodebook = iterateCodebook(dataTraining, codebook)
+	changes = calculateEpsilons(codebook, newCodebook)
 	print 'change factor: %.5f' % changes
 
 	if changes <= epsilon: 
-		return newStream
+		return newCodebook
 	
-	return codebookIteration(dataTraining, newStream, epsilon)	
+	return iterateCodebook(dataTraining, newCodebook)	
 
+#same with train codebook but also return the plot axes
+def trainCodebookForPlot(dataTraining, codebook, epsilon=0.1):
+	#save all codebooks here
+	codebooks = [codebook]
+	changes = epsilon
 
-def generateNewCodebook(stream, training, bits, N, epsilon=0.1):
-	M = (2 ** bits) ** 2
-	
-	#initialize a random codebook from our data stream
-	cb = randomCodebook(stream, M, N)
+	while changes >= epsilon:
+		newCodebook = iterateCodebook(dataTraining, codebook)
+		codebooks.append(newCodebook)
+		changes = calculateEpsilons(codebook, newCodebook)
+		print 'change factor: %.5f' % changes
+		codebook = newCodebook
 
-	#generate tuple array from our training data
-	ts = generateTupleArray(training,N)
-
-	#apply normalization
-	# ts = multipleTupleArray(ts, 1.0/getAbsoluteMax(speech))
-	# cb = multipleTupleArray(cb, 1.0/getAbsoluteMax(audioSinging))
-	
-	return codebookIteration(ts, cb, epsilon)
-
-
+	return codebook, codebooks
 
 #return false if changes are already <= epsilon
 #return true if changes are > epsilon
