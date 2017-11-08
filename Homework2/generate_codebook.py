@@ -38,9 +38,9 @@ speech = speech[:elemNum]
 #mid tread with M=16 (4bits)
 #the result should be awful!
 bitNum = 4
-# audioSingingMT = midTread(audioSinging, bitNum)
-# #print 'Audio singing midtread with %dbit' % bitNum
-# playFile(audioSingingMT, rateAudio, 1, partPlayed=0.25)
+audioSingingMT = midTread(audioSinging, bitNum)
+print 'Audio singing midtread with %dbit' % bitNum
+playFile(audioSingingMT, rateAudio, 1)
 
 #3 LBG algorithm
 N = 2

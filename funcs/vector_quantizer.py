@@ -30,10 +30,10 @@ def randomCodebook(x, M, N):
 
 	return cb
 
-#calculate new codevector 
+#calculate new centroid 
 #from a list of tuple
 #e.g. [(4,5), (7,8)] -> ( (4+7)/2, (5+8)/2  )
-def calculateCodeVector(x):	
+def calculateCentroid(x):	
 	if len(x) == 1: return x[0]
 
 	tupleLength = len(x[0])
@@ -84,7 +84,7 @@ def iterateCodebook(ts, y):
 			newY.append(y[idx])
 			continue
 
-		newY.append(calculateCodeVector(val))
+		newY.append(calculateCentroid(val))
 
 	return newY
 
