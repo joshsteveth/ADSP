@@ -96,7 +96,7 @@ def trainCodebook(dataTraining, codebook, epsilon=0.1):
 	if changes <= epsilon: 
 		return newCodebook
 	
-	return iterateCodebook(dataTraining, newCodebook)	
+	return trainCodebook(dataTraining, newCodebook, epsilon=epsilon)	
 
 #same with train codebook but also return the plot axes
 def trainCodebookForPlot(dataTraining, codebook, epsilon=0.1):
@@ -121,8 +121,8 @@ def trainCodebookForPlot(dataTraining, codebook, epsilon=0.1):
 
 #encode the stream based on the codebook
 #result is array of indices
-def encodeLBG(str, cb, threshold=0.0):
-	ts = generateTupleArray(str, len(cb[0]))
+def encodeLBG(dataStream, codebook, threshold=0.0):
+	ds = generateTupleArray(dataStream, len(codebook[0]))
 
 	indices = []
 
@@ -130,10 +130,10 @@ def encodeLBG(str, cb, threshold=0.0):
 	#calculate best match 
 	#best match is the point that has the least distance
 	#append indices of the best match to the result
-	for t in ts:
+	for d in ds:
 		bestMatch = ()
-		for idx, val in enumerate(cb):
-			dist = calculateDist(t, val)
+		for idx, val in enumerate(codebook):
+			dist = calculateDist(d, val)
 
 			if dist <= threshold:
 				bestMatch = (idx, dist)
@@ -260,20 +260,19 @@ def processingData(startIndex, dataStream, codebook, indices):
 
 #decode the indices back to "analog" signal
 #simply match the indices to the index in codebook
-def decodeLBG(indices, cb):
+def decodeLBG(indices, codebook):
 	strek = []
 
 	for i in indices:
-		for val in cb[i]:
+		for val in codebook[i]:
 			strek.append(val)
 
 	return strek
 
-def LBG(str, cb, threshold=0.0):
-	indices = encodeLBG(str, cb, threshold=threshold)
+def LBG(dataStream, codebook, threshold=0.0):
+	indices = encodeLBG(dataStream, codebook, threshold=threshold)
+	return decodeLBG(indices, codebook)
 
-	return decodeLBG(indices, cb)
-
-def LBGMT(str, cb, M):
-	indices = encodeLBGMT(str, cb, M)
-	return decodeLBG(indices, cb)
+def LBGMT(dataStream, codebook, M):
+	indices = encodeLBGMT(dataStream, codebook, M)
+	return decodeLBG(indices, codebook)
