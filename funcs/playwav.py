@@ -100,6 +100,7 @@ def PlayFileChunk(audio, samplingRate, channels,
     activeSamplingRate = samplingRate
     activeAudio = audio
     activeCHUNK = CHUNK
+    plotSpectrum = True
 
     print 'active filter = Parks-McClellan'
     print 'sampling factor: %d' % samplingFactor
@@ -185,6 +186,15 @@ def PlayFileChunk(audio, samplingRate, channels,
         elif key == ord('s'):
             print 'Stop playing audio'
             break
+        elif key == ord('z'):
+            if plotSpectrum:
+                print 'Turning off plot spectrum' 
+                plotSpectrum = False
+            else: 
+                print 'Turning on plot spectrum'
+                plotSpectrum = True
+
+        if not plotSpectrum: continue
 
         plt.clf()
         try:
