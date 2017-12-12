@@ -186,20 +186,20 @@ def PlayFileChunk(audio, samplingRate, channels,
             print 'Stop playing audio'
             break
 
-        # plt.clf()
-        # try:
-        #     spec_x = np.fft.fftfreq(activeCHUNK, d = 1.0/activeSamplingRate)
-        #     y = np.fft.fft(frame)
-        #     spec_y = [np.sqrt(c.real ** 2 + c.imag ** 2) for c in y]
-        #     plt.plot(spec_x, spec_y)
-        #     plt.xlabel("frequency [Hz]")
-        #     plt.ylabel("amplitude spectrum")
-        #     #Pause
-        #     plt.pause(.001)
-        # except ValueError as e:
-        #     print n, "Value error:", e
-        # except:
-        #     print "Unexpected error:", sys.exc_info()[0]
+        plt.clf()
+        try:
+            spec_x = np.fft.fftfreq(activeCHUNK, d = 1.0/activeSamplingRate)
+            y = np.fft.fft(frame)
+            spec_y = [np.sqrt(c.real ** 2 + c.imag ** 2) for c in y]
+            plt.plot(spec_x, spec_y)
+            plt.xlabel("frequency [Hz]")
+            plt.ylabel("amplitude spectrum")
+            #Pause
+            plt.pause(.001)
+        except ValueError as e:
+            print n, "Value error:", e
+        except:
+            print "Unexpected error:", sys.exc_info()[0]
 
     plt.clf()
     stream.stop_stream()
