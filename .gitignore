@@ -1,6 +1,7 @@
 #ignore compiled python file
 *.pyc
 
-#also ignore txt and png file
+#also ignore txt and img file
 *.png
 *.txt
+*.jpg
