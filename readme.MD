@@ -15,3 +15,6 @@ Code can be sloppy since it's for one time demonstration only and I'm like super
 
 ## Homework3
 ### Audio Playback Framework (Down-, Upsampling, Standard Filtering) 
+
+## Homework4
+### Noble Identities, Filter Design (Parks-McClellan)
