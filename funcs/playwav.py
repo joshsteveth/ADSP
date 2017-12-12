@@ -95,12 +95,13 @@ def PlayFileChunk(audio, samplingRate, channels,
     framesNum = len(audio) // CHUNK
 
     #add options for down/upsampling the signal
-    activeFilter = FIR
+    activeFilter = Remez
     activeSampling = 'NA'
     activeSamplingRate = samplingRate
     activeAudio = audio
+    activeCHUNK = CHUNK
 
-    print 'active filter = FIR'
+    print 'active filter = Parks-McClellan'
     print 'sampling factor: %d' % samplingFactor
 
     p = pyaudio.PyAudio()
@@ -109,77 +110,96 @@ def PlayFileChunk(audio, samplingRate, channels,
                     channels=channels,
                     rate=activeSamplingRate,
                     output=True,
-                    frames_per_buffer=CHUNK)
+                    frames_per_buffer=activeCHUNK)
 
     n = 0
-
+    
     while(True):
-        if (n+2) * CHUNK >= len(activeAudio):
+        if (n+2) * activeCHUNK >= len(activeAudio):
             n = 0
         else: n += 1
 
         try:
-            frame = activeAudio[n * CHUNK : (n+1) * CHUNK]
+            frame = activeAudio[n * activeCHUNK : (n+1) * activeCHUNK]
         except:
-            frame = activeAudio[n * CHUNK:]
+            frame = activeAudio[n * activeCHUNK:]
         sound = (frame.astype(np.int16).tostring())
         
 
         # stream.write(sound)
-        t1 = playThread(stream, sound,CHUNK)
+        t1 = playThread(stream, sound,activeCHUNK)
         t1.start();t1.join()
 
         key=cv2.waitKey(1) & 0xFF;
         if key == ord('f'):
-            if activeFilter == FIR:
-                print 'New active filter: IIR'
-                activeFilter = IIR
-            else:
+            if activeFilter == Remez:
                 print 'New active filter: FIR'
                 activeFilter = FIR
+            elif activeFilter == FIR:
+                print 'New active filter: IIR'
+                activeFilter = IIR
+            elif activeFilter == IIR:
+                print 'New active filter: Noble identity'
+                activeFilter = 'Noble Identity'
+            elif activeFilter == 'Noble Identity':
+                print 'New active filter: None'
+                activeFilter = noFilter
+            else:
+                print 'New active filter: Parks-McClellan'
+                activeFilter = Remez
         elif key == ord('d'): 
             print 'Downsampling audio'
-            # activeSampling = 'down'
-            activeAudio = downSample(activeAudio[:], samplingFactor, 
-                filter=activeFilter)
+            if activeFilter == 'Noble Identity':
+                activeAudio = NobleIdentityDownsampling(activeAudio[:], samplingFactor)
+            else:
+                activeAudio = downSample(activeAudio[:], samplingFactor, 
+                    filter=activeFilter)
+                # activeAudio = downSampleNoFilter(activeAudio[:], samplingFactor)
+                
             activeSamplingRate = activeSamplingRate / samplingFactor
             stream = resetStream(p, stream, activeSamplingRate, 
-                channels, CHUNK)
+                channels, activeCHUNK)
             n = n / samplingFactor
+            activeCHUNK = activeCHUNK / samplingFactor
         elif key == ord('u'):
             print 'Upsampling audio'
-            # activeSampling = 'up'
-            activeAudio = upSample(activeAudio[:], samplingFactor, 
-                filter=activeFilter)
+            if activeFilter == 'Noble Identity':
+                activeAudio = NobleIdentityUpsampling(activeAudio[:], samplingFactor)
+            else:
+                activeAudio = upSample(activeAudio[:], samplingFactor, 
+                    filter=activeFilter)
+                # activeAudio = upSampleNoFilter(activeAudio[:], samplingFactor)
             activeSamplingRate = activeSamplingRate * samplingFactor
             stream = resetStream(p, stream, activeSamplingRate, 
-                channels, CHUNK)
+                channels, activeCHUNK)
             n = n * samplingFactor
+            activeCHUNK = activeCHUNK * samplingFactor
         elif key == ord('r'):
             print 'Reset to original audio'
             activeAudio = audio[:]
             activeSamplingRate = samplingRate
+            activeCHUNK = CHUNK
             stream = resetStream(p, stream, activeSamplingRate, 
-                channels, CHUNK)
+                channels, activeCHUNK)
             n = 0
         elif key == ord('s'):
             print 'Stop playing audio'
             break
 
-        plt.clf()
-        try:
-            spec_x = np.fft.fftfreq(CHUNK, d = 1.0/activeSamplingRate)
-            y = np.fft.fft(frame)
-            spec_y = [np.sqrt(c.real ** 2 + c.imag ** 2) for c in y]
-            plt.plot(spec_x, spec_y)
-            plt.xlabel("frequency [Hz]")
-            plt.ylabel("amplitude spectrum")
-            #Pause
-            plt.pause(.001)
-        except ValueError as e:
-            print n, "Value error:", e
-        except:
-            print "Unexpected error:", sys.exc_info()[0]
+        # plt.clf()
+        # try:
+        #     spec_x = np.fft.fftfreq(activeCHUNK, d = 1.0/activeSamplingRate)
+        #     y = np.fft.fft(frame)
+        #     spec_y = [np.sqrt(c.real ** 2 + c.imag ** 2) for c in y]
+        #     plt.plot(spec_x, spec_y)
+        #     plt.xlabel("frequency [Hz]")
+        #     plt.ylabel("amplitude spectrum")
+        #     #Pause
+        #     plt.pause(.001)
+        # except ValueError as e:
+        #     print n, "Value error:", e
+        # except:
+        #     print "Unexpected error:", sys.exc_info()[0]
 
     plt.clf()
     stream.stop_stream()
